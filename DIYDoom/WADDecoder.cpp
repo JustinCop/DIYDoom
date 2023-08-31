@@ -27,6 +27,23 @@ void WADDecoder::ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WAD
     directory.lumpName[8] = '\0';
 }
 
+void WADDecoder::ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex& vertex)
+{
+    vertex.x = Read2Bytes(pWADData, offset);
+    vertex.y = Read2Bytes(pWADData, offset + 2);
+}
+
+void WADDecoder::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef& lineDef)
+{
+    lineDef.startVertex = Read2Bytes(pWADData, offset);
+    lineDef.endVertex = Read2Bytes(pWADData, offset + 2);
+    lineDef.flags = Read2Bytes(pWADData, offset + 4);
+    lineDef.lineTypeAction = Read2Bytes(pWADData, offset + 6);
+    lineDef.sectorTag = Read2Bytes(pWADData, offset + 8);
+    lineDef.frontSideDef = Read2Bytes(pWADData, offset + 10);
+    lineDef.backSideDef = Read2Bytes(pWADData, offset + 12);
+}
+
 uint16_t WADDecoder::Read2Bytes(const uint8_t* pWADData, uint32_t offset)
 {
     uint16_t value;

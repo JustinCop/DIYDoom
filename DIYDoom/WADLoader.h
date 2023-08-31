@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "WADDecoder.h"
+#include "Map.h"
 
 // WAD Loader for users.
 class WADLoader
@@ -17,6 +18,12 @@ private:
     // helper functions
     bool OpenAndLoad();     // Read and save raw data
     bool ReadDirectories();
+
+    int FindMapIndex(const Map& map);  // Find the lump index of a map
+    bool ReadMapVertex(Map& map);
+
+    int FindLineDefIndex(const LineDef& lineDef);
+    bool ReadMapLineDef(LineDef& lineDef);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;
