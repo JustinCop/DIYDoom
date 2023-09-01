@@ -37,7 +37,7 @@ void WADDecoder::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineD
 {
     lineDef.startVertex = Read2Bytes(pWADData, offset);
     lineDef.endVertex = Read2Bytes(pWADData, offset + 2);
-    lineDef.flags = Read2Bytes(pWADData, offset + 4);
+    lineDef.lineDefFlags = Read2Bytes(pWADData, offset + 4);
     lineDef.lineTypeAction = Read2Bytes(pWADData, offset + 6);
     lineDef.sectorTag = Read2Bytes(pWADData, offset + 8);
     lineDef.frontSideDef = Read2Bytes(pWADData, offset + 10);

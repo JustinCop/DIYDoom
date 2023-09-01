@@ -13,6 +13,7 @@ public:
     ~WADLoader();
 
     bool LoadWAD(); // interface to outside
+    bool LoadMapData(Map &map);
 
 private:
     // helper functions
@@ -21,9 +22,7 @@ private:
 
     int FindMapIndex(const Map& map);  // Find the lump index of a map
     bool ReadMapVertex(Map& map);
-
-    int FindLineDefIndex(const LineDef& lineDef);
-    bool ReadMapLineDef(LineDef& lineDef);
+    bool ReadMapLineDef(Map &map);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;

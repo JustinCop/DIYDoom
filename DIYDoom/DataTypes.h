@@ -1,7 +1,6 @@
 #pragma once
 #include <cstdint>
 #include <map>
-
 struct WADHeader
 {
     char type[5];    // either IWAD (official) or PWAD (mod)
@@ -22,11 +21,24 @@ struct Vertex
     int16_t y;
 };
 
+enum LINE_DEF_FLAGS
+{
+    eBLOCKING = 0,
+    eBLOCK_MONSTERS = 0x1,
+    eTWO_SIDED = 0x2,
+    eDONT_PEG_TOP = 0x4,
+    eDONT_PEG_BOTTOM = 0x8,
+    eSECRET = 0x10,
+    eBLOCK_SOUND = 0x20,
+    eDONT_DRAW = 0x40,
+    eDRAW = 0x80
+};
+
 struct LineDef
 {
     uint16_t startVertex;
     uint16_t endVertex;
-    uint16_t flags;
+    uint16_t lineDefFlags;
     uint16_t lineTypeAction;
     uint16_t sectorTag;
     uint16_t frontSideDef;  // 0xFFFF side not present
@@ -49,16 +61,13 @@ enum MAP_LUMPS_INDEX
     eCOUNT
 };
 
-static const std::map<MAP_LUMPS_INDEX, std::string> LumpIndexNames =
-{
-    {eTHINGS, "THINGS"},
-    {eLINEDEFS, "LINEDEFS"},
-    {eSIDEDDEFS, "SIDEDDEFS"},
-    {eVERTEXES, "VERTEXES"},
-    {eSEAGS, "SEAGS"},
-    {eSSECTORS, "SSECTORS"},
-    {eNODES, "NODES"},
-    {eSECTORS, "SECTORS"},
-    {eREJECT, "REJECT"},
-    {eBLOCKMAP, "BLOCKMAP"}
-};
+#define str_THINGS "THINGS"
+#define str_LINEDEFS "LINEDEFS"
+#define str_SIDEDDEFS "SIDEDDEFS"
+#define str_VERTEXES "VERTEXES"
+#define str_SEAGS "SEAGS"
+#define str_SSECTORS "SSECTORS"
+#define str_NODES "NODES"
+#define str_SECTORS "SECTORS"
+#define str_REJECT "REJECT"
+#define str_BLOCKMAP "BLOCKMAP"
