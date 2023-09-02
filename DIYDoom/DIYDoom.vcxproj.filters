@@ -21,7 +21,7 @@
     <ClCompile Include="WADLoader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="WADDecoder.cpp">
+    <ClCompile Include="WADReader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
@@ -35,7 +35,7 @@
     <ClInclude Include="DataTypes.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="WADDecoder.h">
+    <ClInclude Include="WADReader.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">

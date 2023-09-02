@@ -1,7 +1,7 @@
-#include "WADDecoder.h"
+#include "WADReader.h"
 #include <cstring>
 
-void WADDecoder::ReadHeaderData(const uint8_t* pWADData, WADHeader& header)
+void WADReader::ReadHeaderData(const uint8_t* pWADData, WADHeader& header)
 {
     // first 4 bytes for "IWAD" or "PWAD"
     memcpy(header.type, pWADData, 4);
@@ -14,7 +14,7 @@ void WADDecoder::ReadHeaderData(const uint8_t* pWADData, WADHeader& header)
     header.directoryOffset = Read4Bytes(pWADData, 8);
 }
 
-void WADDecoder::ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WADDirectory& directory)
+void WADReader::ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WADDirectory& directory)
 {
     //0x00 to 0x03
     directory.lumpOffset = Read4Bytes(pWADData, offset);
@@ -27,13 +27,13 @@ void WADDecoder::ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WAD
     directory.lumpName[8] = '\0';
 }
 
-void WADDecoder::ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex& vertex)
+void WADReader::ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex& vertex)
 {
     vertex.x = Read2Bytes(pWADData, offset);
     vertex.y = Read2Bytes(pWADData, offset + 2);
 }
 
-void WADDecoder::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef& lineDef)
+void WADReader::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef& lineDef)
 {
     lineDef.startVertex = Read2Bytes(pWADData, offset);
     lineDef.endVertex = Read2Bytes(pWADData, offset + 2);
@@ -44,21 +44,21 @@ void WADDecoder::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineD
     lineDef.backSideDef = Read2Bytes(pWADData, offset + 12);
 }
 
-uint16_t WADDecoder::Read2Bytes(const uint8_t* pWADData, uint32_t offset)
+uint16_t WADReader::Read2Bytes(const uint8_t* pWADData, uint32_t offset)
 {
     uint16_t value;
     memcpy(&value, pWADData + offset, sizeof(uint16_t));
     return value;
 }
 
-uint32_t WADDecoder::Read4Bytes(const uint8_t* pWADData, uint32_t offset)
+uint32_t WADReader::Read4Bytes(const uint8_t* pWADData, uint32_t offset)
 {
     uint32_t value;
     memcpy(&value, pWADData + offset, sizeof(uint32_t));
     return value;
 }
 
-uint64_t WADDecoder::Read8Bytes(const uint8_t* pWADData, uint32_t offset)
+uint64_t WADReader::Read8Bytes(const uint8_t* pWADData, uint32_t offset)
 {
     uint64_t value;
     memcpy(&value, pWADData + offset, sizeof(uint64_t));

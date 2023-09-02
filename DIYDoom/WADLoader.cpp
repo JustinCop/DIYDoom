@@ -18,7 +18,7 @@ bool WADLoader::LoadWAD()
         return false;
     }
 
-    if (!ReadDirectories())
+    if (!ReadHeaderAndDirectories())
     {
         return false;
     }
@@ -72,12 +72,8 @@ bool WADLoader::ReadMapVertex(Map& map)
     for (uint32_t i = 0; i < vtxCount; ++i)
     {
         Vertex vtx;
-        WADDecoder::ReadVertexData(m_pWADData, vtxDir.lumpOffset + i * vtxSize, vtx);
+        WADReader::ReadVertexData(m_pWADData, vtxDir.lumpOffset + i * vtxSize, vtx);
         map.AddVertex(vtx);
-
-        //std::cout << vtx.x << std::endl;
-        //std::cout << vtx.y << std::endl;
-        //std::cout << std::endl;
     }
 
     return true;
@@ -103,17 +99,8 @@ bool WADLoader::ReadMapLineDef(Map &map)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
         LineDef line;
-        WADDecoder::ReadLineDefData(m_pWADData, lineDir.lumpOffset + i * lineSize, line);
+        WADReader::ReadLineDefData(m_pWADData, lineDir.lumpOffset + i * lineSize, line);
         map.AddLineDef(line);
-
-        //std::cout << line.startVertex << std::endl;
-        //std::cout << line.endVertex << std::endl;
-        //std::cout << line.flags << std::endl;
-        //std::cout << line.lineTypeAction << std::endl;
-        //std::cout << line.sectorTag << std::endl;
-        //std::cout << line.frontSideDef << std::endl;
-        //std::cout << line.backSideDef << std::endl;
-        //std::cout << std::endl;
     }
 
     return true;
@@ -142,26 +129,15 @@ bool WADLoader::OpenAndLoad()
     return true;
 }
 
-bool WADLoader::ReadDirectories()
+bool WADLoader::ReadHeaderAndDirectories()
 {
-    WADHeader header;
-    WADDecoder::ReadHeaderData(m_pWADData, header);
+    WADReader::ReadHeaderData(m_pWADData, m_WADHeader);
 
-    //std::cout << header.type << std::endl;
-    //std::cout << header.directoryCount << std::endl;
-    //std::cout << header.directoryOffset << std::endl;
-    //std::cout << std::endl << std::endl;
-
-    for (uint32_t i = 0; i < header.directoryCount; ++i)
+    for (uint32_t i = 0; i < m_WADHeader.directoryCount; ++i)
     {
         WADDirectory dir;
-        WADDecoder::ReadDirectoryData(m_pWADData, header.directoryOffset + i * 16, dir);
+        WADReader::ReadDirectoryData(m_pWADData, m_WADHeader.directoryOffset + i * 16, dir);
         m_WADDirectories.push_back(dir);
-
-        //std::cout << dir.lumpOffset << std::endl;
-        //std::cout << dir.lumpSize << std::endl;
-        //std::cout << dir.lumpName << std::endl;
-        //std::cout << std::endl << std::endl;
     }
 
     return true;

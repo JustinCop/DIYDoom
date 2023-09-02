@@ -137,13 +137,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="WADDecoder.cpp" />
+    <ClCompile Include="WADReader.cpp" />
     <ClCompile Include="WADLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="WADDecoder.h" />
+    <ClInclude Include="WADReader.h" />
     <ClInclude Include="WADLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

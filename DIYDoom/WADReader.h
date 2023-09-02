@@ -1,7 +1,7 @@
 #pragma once
 #include "DataTypes.h"
 
-class WADDecoder
+class WADReader
 {
 public:
     static void ReadHeaderData(const uint8_t* pWADData, WADHeader& header);
