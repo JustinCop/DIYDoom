@@ -38,7 +38,7 @@ private:
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;
-    uint8_t* m_pWADData;
+    const uint8_t* m_pWADData;
 
     WADHeader m_WADHeader;
     std::vector<WADDirectory> m_WADDirectories;
