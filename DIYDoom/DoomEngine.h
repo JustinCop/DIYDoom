@@ -26,7 +26,7 @@ public:
     virtual int GetTimePerFrame() const { return 1000 / 60; }   // in micro-seconds.
 
     virtual std::string GetName() const { return "DIYDOOM"; }
-    virtual std::string GetWADFileName();
+    virtual std::string GetWADFileName() const { return "../assets/doom.wad"; }
 
 protected:
     int m_iRenderWidth;

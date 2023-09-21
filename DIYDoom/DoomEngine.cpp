@@ -52,11 +52,6 @@ void DoomEngine::Update()
 {
 }
 
-std::string DoomEngine::GetWADFileName()
-{
-    return "../assets/doom.wad";
-}
-
 bool DoomEngine::Init()
 {
     m_WADLoader.SetWADFilePath(GetWADFileName());
