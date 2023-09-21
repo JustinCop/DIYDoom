@@ -1,14 +1,14 @@
 #include "WADLoader.h"
 #include <iostream>
 
-WADLoader::WADLoader(std::string WADFilePath) :
-    m_WADFilePath(WADFilePath),
+WADLoader::WADLoader():
     m_pWADData(nullptr)
 {
 }
 
 WADLoader::~WADLoader()
 {
+    delete[] m_pWADData;
 }
 
 bool WADLoader::LoadWAD()
@@ -26,16 +26,16 @@ bool WADLoader::LoadWAD()
     return true;
 }
 
-bool WADLoader::LoadMapData(Map& map)
+bool WADLoader::LoadMapData(Map* pMap)
 {
-    if (!ReadMapVertex(map))
+    if (!ReadMapVertex(pMap))
     {
-        std::cout << "Error: Failed to load map vertex data MAP: " << map.GetName() << std::endl;
+        std::cout << "Error: Failed to load map vertex data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
-    if (!ReadMapLineDef(map))
+    if (!ReadMapLineDef(pMap))
     {
-        std::cout << "Error: Failed to load map linedef data MAP: " << map.GetName() << std::endl;
+        std::cout << "Error: Failed to load map linedef data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
 
@@ -52,9 +52,9 @@ int WADLoader::FindMapIndex(const Map& map)
     return -1;
 }
 
-bool WADLoader::ReadMapVertex(Map& map)
+bool WADLoader::ReadMapVertex(Map* pMap)
 {
-    int iMapIndex = FindMapIndex(map);
+    int iMapIndex = FindMapIndex(*pMap);
     if (iMapIndex == -1)
     {
         return false;
@@ -73,15 +73,15 @@ bool WADLoader::ReadMapVertex(Map& map)
     {
         Vertex vtx;
         WADReader::ReadVertexData(m_pWADData, vtxDir.lumpOffset + i * vtxSize, vtx);
-        map.AddVertex(vtx);
+        pMap->AddVertex(vtx);
     }
 
     return true;
 }
 
-bool WADLoader::ReadMapLineDef(Map &map)
+bool WADLoader::ReadMapLineDef(Map* pMap)
 {
-    int iMapIndex = FindMapIndex(map);
+    int iMapIndex = FindMapIndex(*pMap);
     if (iMapIndex == -1)
     {
         return false;
@@ -100,7 +100,7 @@ bool WADLoader::ReadMapLineDef(Map &map)
     {
         LineDef line;
         WADReader::ReadLineDefData(m_pWADData, lineDir.lumpOffset + i * lineSize, line);
-        map.AddLineDef(line);
+        pMap->AddLineDef(line);
     }
 
     return true;

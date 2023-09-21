@@ -9,14 +9,16 @@
 class WADLoader
 {
 public:
-    WADLoader(std::string WADFilePath);
+    WADLoader();
     ~WADLoader();
+
+    void SetWADFilePath(std::string sWADFilePath) { m_WADFilePath = sWADFilePath; }
 
     // Initialize WAD raw data, decide Header and Directory.
     bool LoadWAD();
 
     // Given a map initialized with map name, find the map and retrieve vertex/lineDef data.
-    bool LoadMapData(Map &map);
+    bool LoadMapData(Map* pMap);
 
 private:
     // helper functions
@@ -31,10 +33,10 @@ private:
     int FindMapIndex(const Map& map);
     
     // Read map vertex data and save into a named map.
-    bool ReadMapVertex(Map& map);
+    bool ReadMapVertex(Map* pMap);
     
     // Read map lineDef data and save into a named map.
-    bool ReadMapLineDef(Map &map);
+    bool ReadMapLineDef(Map* pMap);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "WADLoader.h"
+#include <SDL.h>
 
 // DoomEngine class will be a class that knows the internals of our 
 // Doom clone.It will keep track of the player, the game status, what 
@@ -12,19 +13,19 @@ public:
     ~DoomEngine();
 
     virtual void Render(SDL_Renderer *pRenderer); // Draw something to show on screen
-    virtual void KeyPressed(SDL_Event &event); // Which keys are pressed?
-    virtual void KeyReleased(SDL_Event &event); // Which keys are released?
+    virtual void KeyPressed(const SDL_Event &event); // Which keys are pressed?
+    virtual void KeyReleased(const SDL_Event &event); // Which keys are released?
     virtual void Quit(); // Close and shutdown the game
     virtual void Update();
 
-    virtual bool IsOver(); // Did the game end?
+    virtual bool IsOver() const { return m_bIsOver; } // Did the game end?
     virtual bool Init(); // Initialize game object
 
-    virtual int GetRenderWidth();
-    virtual int GetRenderHeight();
-    virtual int GetTimePerFrame();
+    virtual int GetRenderWidth() const { return m_iRenderWidth; }
+    virtual int GetRenderHeight() const { return m_iRenderHeight; }
+    virtual int GetTimePerFrame() const { return 1000 / 60; }   // in micro-seconds.
 
-    virtual std::string GetName();
+    virtual std::string GetName() const { return "DIYDOOM"; }
     virtual std::string GetWADFileName();
 
 protected:

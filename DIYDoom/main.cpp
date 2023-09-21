@@ -1,12 +1,20 @@
-#include "WADLoader.h"
+#include <iostream>
+#include "Game.h"
 
-int main()
+// SDL2 will define main as SDL_main.
+// must add the arguments (int argc, char* argv[]) to keep consistance
+int main(int argc, char* argv[])
 {
-    WADLoader wadLoader("../assets/doom.wad");
-    wadLoader.LoadWAD();
+    Game game;
+    game.Init();
 
-    Map map("E1M1");
-    wadLoader.LoadMapData(map);
+    while (!game.IsOver())
+    {
+        game.ProcessInput();
+        game.Update();
+        game.Render();
+        game.Delay();
+    }
 
     return 0;
 }
