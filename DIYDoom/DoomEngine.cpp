@@ -17,6 +17,7 @@ void DoomEngine::Render(SDL_Renderer* pRenderer)
 {
     SDL_SetRenderDrawColor(pRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(pRenderer);
+    m_pMap->RenderAutoMap(pRenderer);
 }
 
 void DoomEngine::KeyPressed(const SDL_Event& event)

@@ -98,6 +98,8 @@ void Game::Render()
 
     // GameObjects to draw themselves
     m_pDoomEngine->Render(m_pRenderer);
+
+    SDL_RenderPresent(m_pRenderer);
 }
 
 void Game::Delay()
