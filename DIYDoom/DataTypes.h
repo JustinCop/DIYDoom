@@ -45,6 +45,15 @@ struct LineDef
     uint16_t backSideDef;   // 0xFFFF side not present
 };
 
+struct Thing
+{
+    int16_t xPosition;
+    int16_t yPosition;
+    uint16_t direction;
+    uint16_t type;
+    uint16_t flags;
+};
+
 enum MAP_LUMPS_INDEX
 {
     eTHINGS = 1, // The WAD file is organized in this order: First the Map name (e.g. E1M1), then THINGS, then other stuffs.

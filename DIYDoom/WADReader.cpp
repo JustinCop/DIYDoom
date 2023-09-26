@@ -44,6 +44,15 @@ void WADReader::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDe
     lineDef.backSideDef = Read2Bytes(pWADData, offset + 12);
 }
 
+void WADReader::ReadThingData(const uint8_t* pWADData, uint32_t offset, Thing& thing)
+{
+    thing.xPosition = Read2Bytes(pWADData, offset);
+    thing.yPosition = Read2Bytes(pWADData, offset + 2);
+    thing.direction = Read2Bytes(pWADData, offset + 4);
+    thing.type = Read2Bytes(pWADData, offset + 6);
+    thing.flags = Read2Bytes(pWADData, offset + 8);
+}
+
 uint16_t WADReader::Read2Bytes(const uint8_t* pWADData, uint32_t offset)
 {
     uint16_t value;

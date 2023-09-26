@@ -28,26 +28,46 @@ bool WADLoader::LoadWAD()
 
 bool WADLoader::LoadMapData(Map* pMap)
 {
+    std::cout << "Info: Parsing Map: " << pMap->GetName() << std::endl;
+
+    std::cout << "Info: Processing Map Vertex" << std::endl;
     if (!ReadMapVertex(pMap))
     {
         std::cout << "Error: Failed to load map vertex data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
+    std::cout << "Info: Processing Map Linedef" << std::endl;
     if (!ReadMapLineDef(pMap))
     {
         std::cout << "Error: Failed to load map linedef data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
 
+    std::cout << "Info: Processing Map Things" << std::endl;
+    if (!ReadMapThing(pMap))
+    {
+        std::cout << "Error: Failed to load map thing data MAP: " << pMap->GetName() << std::endl;
+        return false;
+    }
+
     return true;
 }
 
-int WADLoader::FindMapIndex(const Map& map)
+int WADLoader::FindMapIndex(Map* pMap)
 {
+    if (pMap->GetLumpIndex() > -1)
+    {
+        // The map is alreay found
+        return pMap->GetLumpIndex();
+    }
+
     for (size_t i = 0; i < m_WADDirectories.size(); ++i)
     {
-        if (m_WADDirectories[i].lumpName == map.GetName())
+        if (m_WADDirectories[i].lumpName == pMap->GetName())
+        {
+            pMap->SetLumpIndex((int)i);
             return (int)i;
+        }
     }
     return -1;
 }
@@ -87,7 +107,7 @@ bool WADLoader::ReadMapLineDef(Map* pMap)
         return false;
     }
 
-    const WADDirectory &lineDir = m_WADDirectories[iMapIndex += eLINEDEFS];
+    const WADDirectory &lineDir = m_WADDirectories[iMapIndex + eLINEDEFS];
     if (strcmp(lineDir.lumpName, str_LINEDEFS) != 0)
     {
         return false;
@@ -101,6 +121,33 @@ bool WADLoader::ReadMapLineDef(Map* pMap)
         LineDef line;
         WADReader::ReadLineDefData(m_pWADData, lineDir.lumpOffset + i * lineSize, line);
         pMap->AddLineDef(line);
+    }
+
+    return true;
+}
+
+bool WADLoader::ReadMapThing(Map* pMap)
+{
+    int iMapIndex = FindMapIndex(*pMap);
+    if (iMapIndex == -1)
+    {
+        return false;
+    }
+
+    const WADDirectory& thingDir = m_WADDirectories[iMapIndex + eTHINGS];
+    if (strcmp(thingDir.lumpName, str_THINGS) != 0)
+    {
+        return false;
+    }
+
+    const uint32_t thingSize = sizeof(Thing);
+    const uint32_t thingCount = thingDir.lumpSize / thingSize;
+
+    for (uint32_t i = 0; i < thingCount; ++i)
+    {
+        Thing thing;
+        WADReader::ReadThingData(m_pWADData, thingDir.lumpOffset + i * thingSize, thing);
+        pMap->AddThing(thing);
     }
 
     return true;

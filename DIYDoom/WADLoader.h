@@ -30,13 +30,16 @@ private:
     bool ReadHeaderAndDirectories();
 
     // Find the lump index of a named map, i.e. the lump index to m_WADDirectories.
-    int FindMapIndex(const Map& map);
+    int FindMapIndex(Map* map);
     
     // Read map vertex data and save into a named map.
     bool ReadMapVertex(Map* pMap);
     
     // Read map lineDef data and save into a named map.
     bool ReadMapLineDef(Map* pMap);
+
+    // Read map Thing struct
+    bool ReadMapThing(Map* pMap);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;
