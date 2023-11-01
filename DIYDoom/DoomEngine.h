@@ -12,14 +12,14 @@ public:
     DoomEngine();
     ~DoomEngine();
 
-    virtual void Render(SDL_Renderer *pRenderer); // Draw something to show on screen
+    virtual void Render(); // Draw something to show on screen
     virtual void KeyPressed(const SDL_Event &event); // Which keys are pressed?
     virtual void KeyReleased(const SDL_Event &event); // Which keys are released?
     virtual void Quit(); // Close and shutdown the game
     virtual void Update();
 
     virtual bool IsOver() const { return m_bIsOver; } // Did the game end?
-    virtual bool Init(); // Initialize game object
+    virtual bool Init(SDL_Renderer* pRenderer); // Initialize game object
 
     virtual int GetRenderWidth() const { return m_iRenderWidth; }
     virtual int GetRenderHeight() const { return m_iRenderHeight; }
@@ -29,6 +29,7 @@ public:
     virtual std::string GetWADFileName() const { return "../assets/doom.wad"; }
 
 protected:
+    SDL_Renderer* m_pRenderer;
     int m_iRenderWidth;
     int m_iRenderHeight;
 

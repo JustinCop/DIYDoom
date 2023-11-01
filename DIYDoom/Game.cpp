@@ -4,14 +4,15 @@
 
 Game::Game() :
     m_iWindowWidth(1280),
-    m_iWindowHeight(800)
+    m_iWindowHeight(800),
+    m_pRenderer(nullptr),
+    m_pWindow(nullptr),
+    m_pDoomEngine(nullptr)
 {
-    m_pDoomEngine = new DoomEngine();
 }
 
 Game::~Game()
 {
-    delete m_pDoomEngine;
     SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pWindow);
     SDL_Quit();
@@ -25,6 +26,9 @@ bool Game::IsOver()
 
 bool Game::Init()
 {
+    // Create a DoomEngine
+    m_pDoomEngine = std::make_unique<DoomEngine>();
+
     // Initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -51,7 +55,7 @@ bool Game::Init()
     }
 
     SDL_SetRenderDrawColor(m_pRenderer, 0xff, 0xff, 0xff, 0xff);
-    if (!m_pDoomEngine->Init())
+    if (!m_pDoomEngine->Init(m_pRenderer))
     {
         std::cout << m_pDoomEngine->GetName() << " failed to initialize!" << std::endl;
         return false;
@@ -97,7 +101,7 @@ void Game::Render()
     SDL_RenderClear(m_pRenderer);
 
     // GameObjects to draw themselves
-    m_pDoomEngine->Render(m_pRenderer);
+    m_pDoomEngine->Render();
 
     SDL_RenderPresent(m_pRenderer);
 }

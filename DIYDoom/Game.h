@@ -22,6 +22,6 @@ protected:
 
     SDL_Window* m_pWindow; // The windows we will create
     SDL_Renderer* m_pRenderer; // Where we will render our frames
-    DoomEngine* m_pDoomEngine; // This is an object that knows more details about game internal
+    std::unique_ptr<DoomEngine> m_pDoomEngine; // This is an object that knows more details about game internal
 };
 
