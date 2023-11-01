@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <map>
+#include <SDL.h>
+#include <memory>
 
 #define RENDER_WIDTH 320
 #define RENDER_HEIGHT 200
@@ -87,3 +89,24 @@ enum MAP_LUMPS_INDEX
 #define str_SECTORS "SECTORS"
 #define str_REJECT "REJECT"
 #define str_BLOCKMAP "BLOCKMAP"
+
+// Define a smart pointer for SDL
+struct SDLRendererDestroyer
+{
+    void operator()(SDL_Renderer* r) const
+    {
+        SDL_DestroyRenderer(r);
+    }
+};
+
+using SDLRendererPtr = std::shared_ptr<SDL_Renderer>;
+
+struct SDLWindowDestroyer
+{
+    void operator()(SDL_Window* w) const
+    {
+        SDL_DestroyWindow(w);
+    }
+};
+
+using SDLWindowPtr = std::shared_ptr<SDL_Window>;

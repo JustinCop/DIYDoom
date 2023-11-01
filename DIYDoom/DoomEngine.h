@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "WADLoader.h"
-#include <SDL.h>
 
 // DoomEngine class will be a class that knows the internals of our 
 // Doom clone.It will keep track of the player, the game status, what 
@@ -19,7 +18,7 @@ public:
     virtual void Update();
 
     virtual bool IsOver() const { return m_bIsOver; } // Did the game end?
-    virtual bool Init(SDL_Renderer* pRenderer); // Initialize game object
+    virtual bool Init(SDLRendererPtr pRenderer); // Initialize game object
 
     virtual int GetRenderWidth() const { return m_iRenderWidth; }
     virtual int GetRenderHeight() const { return m_iRenderHeight; }
@@ -29,14 +28,14 @@ public:
     virtual std::string GetWADFileName() const { return "../assets/doom.wad"; }
 
 protected:
-    SDL_Renderer* m_pRenderer;
+    SDLRendererPtr m_pRenderer;
     int m_iRenderWidth;
     int m_iRenderHeight;
 
     bool m_bIsOver;
 
     WADLoader m_WADLoader; // Now the game engine will own the loader
-    Map *m_pMap; // Also the map will be owned by the engine.
+    std::shared_ptr<Map> m_pMap; // Also the map will be owned by the engine.
     std::shared_ptr<Player> m_pPlayer;
 };
 

@@ -11,13 +11,12 @@ DoomEngine::DoomEngine():
 
 DoomEngine::~DoomEngine()
 {
-    delete m_pMap;
 }
 
 void DoomEngine::Render()
 {
-    SDL_SetRenderDrawColor(m_pRenderer, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(m_pRenderer);
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(m_pRenderer.get());
     m_pMap->RenderAutoMap();
 }
 
@@ -54,11 +53,11 @@ void DoomEngine::Update()
 {
 }
 
-bool DoomEngine::Init(SDL_Renderer* pRenderer)
+bool DoomEngine::Init(SDLRendererPtr pRenderer)
 {
     m_pRenderer = pRenderer;
     m_pPlayer = std::make_shared<Player>(1);
-    m_pMap = new Map("E1M1", m_pPlayer, pRenderer);
+    m_pMap = std::make_shared<Map>("E1M1", m_pPlayer, pRenderer);
 
     m_WADLoader.SetWADFilePath(GetWADFileName());
     m_WADLoader.LoadWAD();

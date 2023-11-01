@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL.h>
 #include "DoomEngine.h"
 
 class Game
@@ -20,8 +19,8 @@ protected:
     int m_iWindowWidth;
     int m_iWindowHeight;
 
-    SDL_Window* m_pWindow; // The windows we will create
-    SDL_Renderer* m_pRenderer; // Where we will render our frames
+    SDLWindowPtr m_pWindow; // The windows we will create
+    SDLRendererPtr m_pRenderer; // Where we will render our frames
     std::unique_ptr<DoomEngine> m_pDoomEngine; // This is an object that knows more details about game internal
 };
 

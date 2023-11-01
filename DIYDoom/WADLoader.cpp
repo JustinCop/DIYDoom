@@ -102,7 +102,7 @@ bool WADLoader::LoadWAD()
     return true;
 }
 
-bool WADLoader::LoadMapData(Map* pMap)
+bool WADLoader::LoadMapData(std::shared_ptr<Map> pMap)
 {
     std::cout << "Info: Parsing Map: " << pMap->GetName() << std::endl;
 
@@ -129,7 +129,7 @@ bool WADLoader::LoadMapData(Map* pMap)
     return true;
 }
 
-int WADLoader::FindMapIndex(Map* pMap)
+int WADLoader::FindMapIndex(std::shared_ptr<Map> pMap)
 {
     if (pMap->GetLumpIndex() > -1)
     {
@@ -148,7 +148,7 @@ int WADLoader::FindMapIndex(Map* pMap)
     return -1;
 }
 
-bool WADLoader::ReadMapVertex(Map* pMap)
+bool WADLoader::ReadMapVertex(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
@@ -175,7 +175,7 @@ bool WADLoader::ReadMapVertex(Map* pMap)
     return true;
 }
 
-bool WADLoader::ReadMapLineDef(Map* pMap)
+bool WADLoader::ReadMapLineDef(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
@@ -202,7 +202,7 @@ bool WADLoader::ReadMapLineDef(Map* pMap)
     return true;
 }
 
-bool WADLoader::ReadMapThing(Map* pMap)
+bool WADLoader::ReadMapThing(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)

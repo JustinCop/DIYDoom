@@ -1,6 +1,6 @@
 #include "Map.h"
 
-Map::Map(std::string sName, std::shared_ptr<Player> pPlayer, SDL_Renderer* pRenderer) :
+Map::Map(std::string sName, std::shared_ptr<Player> pPlayer, SDLRendererPtr pRenderer) :
     m_name(sName),
     m_xMin_Left(_I16_MAX),
     m_xMax_Right(_I16_MIN),
@@ -11,10 +11,10 @@ Map::Map(std::string sName, std::shared_ptr<Player> pPlayer, SDL_Renderer* pRend
     m_pPlayer(pPlayer),
     m_pRenderer(pRenderer)
 {
-    SDL_RenderGetLogicalSize(m_pRenderer, (int*)(&m_xRenderSize), (int*)(&m_yRenderSize));
+    SDL_RenderGetLogicalSize(m_pRenderer.get(), (int*)(&m_xMax_Render), (int*)(&m_yMax_Render));
 
-    --m_xRenderSize;
-    --m_yRenderSize;
+    --m_xMax_Render;
+    --m_yMax_Render;
 
 }
 
@@ -40,17 +40,13 @@ void Map::AddThing(const Thing& thing)
 
 void Map::RenderAutoMap()
 {
-    //// Treat left-most vertex as origin (0,0)
-    //int16_t xShift = -m_xMin_Left;
-    //int16_t yShift = -m_yMin_Down;
-
     RenderAutoMapWalls();
     RenderAutoMapPlayer();
 }
 
 void Map::RenderAutoMapPlayer()
 {
-    SDL_SetRenderDrawColor(m_pRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 
     std::pair<int, int> Direction[] = {
     std::make_pair(-1, -1), std::make_pair(0, -1), std::make_pair(+1, -1),
@@ -60,34 +56,26 @@ void Map::RenderAutoMapPlayer()
 
     for (int i = 0; i < 9; ++i)
     {
-        SDL_RenderDrawPoint(m_pRenderer,
+        SDL_RenderDrawPoint(m_pRenderer.get(),
                             MapXToScreen(m_pPlayer->GetXPosition()) + Direction[i].first,
                             MapYToScreen(m_pPlayer->GetYPosition()) + Direction[i].second);
-        //SDL_RenderDrawPoint(pRenderer,
-        //                    (m_pPlayer->GetXPosition() + iXShift) / m_iAutoMapScaleFactor + Direction[i].first,
-        //                    iRenderYSize - (m_pPlayer->GetYPosition() + iYShift) / m_iAutoMapScaleFactor + Direction[i].second);
     }
 
 }
 
 void Map::RenderAutoMapWalls()
 {
-    SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);
     for (const LineDef& l : m_lineDefs)
     {
         Vertex vStart = m_vertices[l.startVertex];
         Vertex vEnd = m_vertices[l.endVertex];
 
-        SDL_RenderDrawLine(m_pRenderer,
+        SDL_RenderDrawLine(m_pRenderer.get(),
                            MapXToScreen(vStart.x),
                            MapYToScreen(vStart.y),
                            MapXToScreen(vEnd.x),
                            MapYToScreen(vEnd.y));
-        //SDL_RenderDrawLine(pRenderer,
-        //                   (vStart.x + iXShift) / m_iAutoMapScaleFactor,
-        //                   yRenderSize - (vStart.y + iYShift) / m_iAutoMapScaleFactor,
-        //                   (vEnd.x + iXShift) / m_iAutoMapScaleFactor,
-        //                   yRenderSize - (vEnd.y + iYShift) / m_iAutoMapScaleFactor);
     }
 
 }
@@ -99,5 +87,5 @@ int16_t Map::MapXToScreen(int16_t xMapPosition)
 
 int16_t Map::MapYToScreen(int16_t yMapPosition)
 {
-    return m_yRenderSize - (yMapPosition - m_yMin_Down) / m_iAutoMapScaleFactor;
+    return m_yMax_Render - (yMapPosition - m_yMin_Down) / m_iAutoMapScaleFactor;
 }

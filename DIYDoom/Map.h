@@ -2,14 +2,13 @@
 #include <vector>
 #include <string>
 #include "DataTypes.h"
-#include <SDL.h>
 #include "Player.h"
 #include <memory>
 
 class Map
 {
 public:
-    Map(std::string name, std::shared_ptr<Player> pPlayer, SDL_Renderer* pRenderer);
+    Map(std::string name, std::shared_ptr<Player> pPlayer, SDLRendererPtr pRenderer);
     ~Map() {}
 
     std::string GetName() const { return m_name; }
@@ -47,8 +46,8 @@ protected:
     int m_iLumpIndex;   // Cache the lump index as soon as this map is found
 
     std::shared_ptr<Player> m_pPlayer;
-    SDL_Renderer* m_pRenderer;
-    int16_t m_xRenderSize;  // Render size of SDL window.
-    int16_t m_yRenderSize;  // Render size of SDL window.
+    SDLRendererPtr m_pRenderer;
+    int16_t m_xMax_Render;  // Render size of SDL window.
+    int16_t m_yMax_Render;  // Render size of SDL window.
 };
 

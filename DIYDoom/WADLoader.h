@@ -33,7 +33,7 @@ public:
     bool LoadWAD();
 
     // Given a map initialized with map name, find the map and retrieve vertex/lineDef data.
-    bool LoadMapData(Map* pMap);
+    bool LoadMapData(std::shared_ptr<Map> pMap);
 
 private:
     // helper functions
@@ -45,16 +45,16 @@ private:
     bool ReadHeaderAndDirectories();
 
     // Find the lump index of a named map, i.e. the lump index to m_WADDirectories.
-    int FindMapIndex(Map* map);
+    int FindMapIndex(std::shared_ptr<Map> pMap);
     
     // Read map vertex data and save into a named map.
-    bool ReadMapVertex(Map* pMap);
+    bool ReadMapVertex(std::shared_ptr<Map> pMap);
     
     // Read map lineDef data and save into a named map.
-    bool ReadMapLineDef(Map* pMap);
+    bool ReadMapLineDef(std::shared_ptr<Map> pMap);
 
     // Read map Thing struct
-    bool ReadMapThing(Map* pMap);
+    bool ReadMapThing(std::shared_ptr<Map> pMap);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;
