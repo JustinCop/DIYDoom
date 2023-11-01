@@ -3,8 +3,8 @@
 #include <string>
 
 Game::Game() :
-    m_iWindowWidth(1280),
-    m_iWindowHeight(800),
+    m_iWindowWidth(WINDOW_WIDTH),
+    m_iWindowHeight(WINDOW_HEIGHT),
     m_pRenderer(nullptr),
     m_pWindow(nullptr),
     m_pDoomEngine(nullptr)
@@ -55,17 +55,20 @@ bool Game::Init()
     }
 
     SDL_SetRenderDrawColor(m_pRenderer, 0xff, 0xff, 0xff, 0xff);
-    if (!m_pDoomEngine->Init(m_pRenderer))
-    {
-        std::cout << m_pDoomEngine->GetName() << " failed to initialize!" << std::endl;
-        return false;
-    }
 
     // Sets the logical size of the screen, that means we can draw on a specific render size then, SDL will 
     // automatically stretch it to the window size. This will make the development independent from window resolution
     if (SDL_RenderSetLogicalSize(m_pRenderer, m_pDoomEngine->GetRenderWidth(), m_pDoomEngine->GetRenderHeight()) != 0)
     {
         std::cout << "SDL failed to set logical size! SDL_Error: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    // Use the renderer to Init DoomEngine.
+    // NOTE! Must initialize renderer before using it!
+    if (!m_pDoomEngine->Init(m_pRenderer))
+    {
+        std::cout << m_pDoomEngine->GetName() << " failed to initialize!" << std::endl;
         return false;
     }
 

@@ -1,6 +1,13 @@
 #pragma once
 #include <cstdint>
 #include <map>
+
+#define RENDER_WIDTH 320
+#define RENDER_HEIGHT 200
+#define WINDOW_WIDTH (RENDER_WIDTH * 4)
+#define WINDOW_HEIGHT (RENDER_HEIGHT * 4)
+#define AUTO_MAP_SCALE_FACTOR 15
+
 struct WADHeader
 {
     char type[5];    // either IWAD (official) or PWAD (mod)
