@@ -36,6 +36,6 @@ protected:
 
     WADLoader m_WADLoader; // Now the game engine will own the loader
     Map *m_pMap; // Also the map will be owned by the engine.
-    Player* m_pPlayer;
+    std::shared_ptr<Player> m_pPlayer;
 };
 

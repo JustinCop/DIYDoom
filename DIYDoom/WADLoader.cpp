@@ -1,14 +1,90 @@
 #include "WADLoader.h"
 #include <iostream>
+#include <cstring>
+
+void WADReader::ReadHeaderData(const uint8_t* pWADData, WADHeader& header)
+{
+    // first 4 bytes for "IWAD" or "PWAD"
+    memcpy(header.type, pWADData, 4);
+    header.type[4] = '\0';
+
+    //0x04 to 0x07
+    header.directoryCount = Read4Bytes(pWADData, 4);
+
+    //0x08 to 0x0b
+    header.directoryOffset = Read4Bytes(pWADData, 8);
+}
+
+void WADReader::ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WADDirectory& directory)
+{
+    //0x00 to 0x03
+    directory.lumpOffset = Read4Bytes(pWADData, offset);
+
+    //0x04 to 0x07
+    directory.lumpSize = Read4Bytes(pWADData, offset + 4);
+
+    //0x08 to 0x0F
+    memcpy(directory.lumpName, pWADData + offset + 8, 8);
+    directory.lumpName[8] = '\0';
+}
+
+void WADReader::ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex& vertex)
+{
+    vertex.x = Read2Bytes(pWADData, offset);
+    vertex.y = Read2Bytes(pWADData, offset + 2);
+}
+
+void WADReader::ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef& lineDef)
+{
+    lineDef.startVertex = Read2Bytes(pWADData, offset);
+    lineDef.endVertex = Read2Bytes(pWADData, offset + 2);
+    lineDef.lineDefFlags = Read2Bytes(pWADData, offset + 4);
+    lineDef.lineTypeAction = Read2Bytes(pWADData, offset + 6);
+    lineDef.sectorTag = Read2Bytes(pWADData, offset + 8);
+    lineDef.frontSideDef = Read2Bytes(pWADData, offset + 10);
+    lineDef.backSideDef = Read2Bytes(pWADData, offset + 12);
+}
+
+void WADReader::ReadThingData(const uint8_t* pWADData, uint32_t offset, Thing& thing)
+{
+    thing.xPosition = Read2Bytes(pWADData, offset);
+    thing.yPosition = Read2Bytes(pWADData, offset + 2);
+    thing.direction = Read2Bytes(pWADData, offset + 4);
+    thing.type = Read2Bytes(pWADData, offset + 6);
+    thing.flags = Read2Bytes(pWADData, offset + 8);
+}
+
+uint16_t WADReader::Read2Bytes(const uint8_t* pWADData, uint32_t offset)
+{
+    uint16_t value;
+    memcpy(&value, pWADData + offset, sizeof(uint16_t));
+    return value;
+}
+
+uint32_t WADReader::Read4Bytes(const uint8_t* pWADData, uint32_t offset)
+{
+    uint32_t value;
+    memcpy(&value, pWADData + offset, sizeof(uint32_t));
+    return value;
+}
+
+uint64_t WADReader::Read8Bytes(const uint8_t* pWADData, uint32_t offset)
+{
+    uint64_t value;
+    memcpy(&value, pWADData + offset, sizeof(uint64_t));
+    return value;
+}
+
+
 
 WADLoader::WADLoader():
-    m_pWADData(nullptr)
+    m_pWADData(nullptr),
+    m_WADHeader({})
 {
 }
 
 WADLoader::~WADLoader()
 {
-    delete[] m_pWADData;
 }
 
 bool WADLoader::LoadWAD()
@@ -74,7 +150,7 @@ int WADLoader::FindMapIndex(Map* pMap)
 
 bool WADLoader::ReadMapVertex(Map* pMap)
 {
-    int iMapIndex = FindMapIndex(*pMap);
+    int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
     {
         return false;
@@ -92,7 +168,7 @@ bool WADLoader::ReadMapVertex(Map* pMap)
     for (uint32_t i = 0; i < vtxCount; ++i)
     {
         Vertex vtx;
-        WADReader::ReadVertexData(m_pWADData, vtxDir.lumpOffset + i * vtxSize, vtx);
+        WADReader::ReadVertexData(m_pWADData.get(), vtxDir.lumpOffset + i * vtxSize, vtx);
         pMap->AddVertex(vtx);
     }
 
@@ -101,7 +177,7 @@ bool WADLoader::ReadMapVertex(Map* pMap)
 
 bool WADLoader::ReadMapLineDef(Map* pMap)
 {
-    int iMapIndex = FindMapIndex(*pMap);
+    int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
     {
         return false;
@@ -119,7 +195,7 @@ bool WADLoader::ReadMapLineDef(Map* pMap)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
         LineDef line;
-        WADReader::ReadLineDefData(m_pWADData, lineDir.lumpOffset + i * lineSize, line);
+        WADReader::ReadLineDefData(m_pWADData.get(), lineDir.lumpOffset + i * lineSize, line);
         pMap->AddLineDef(line);
     }
 
@@ -128,7 +204,7 @@ bool WADLoader::ReadMapLineDef(Map* pMap)
 
 bool WADLoader::ReadMapThing(Map* pMap)
 {
-    int iMapIndex = FindMapIndex(*pMap);
+    int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
     {
         return false;
@@ -146,7 +222,7 @@ bool WADLoader::ReadMapThing(Map* pMap)
     for (uint32_t i = 0; i < thingCount; ++i)
     {
         Thing thing;
-        WADReader::ReadThingData(m_pWADData, thingDir.lumpOffset + i * thingSize, thing);
+        WADReader::ReadThingData(m_pWADData.get(), thingDir.lumpOffset + i * thingSize, thing);
         pMap->AddThing(thing);
     }
 
@@ -166,11 +242,11 @@ bool WADLoader::OpenAndLoad()
     // Move file ptr to the end, to check file size
     m_WADFile.seekg(0, m_WADFile.end);
     size_t length = m_WADFile.tellg();
-    m_pWADData = new uint8_t[length];
+    m_pWADData = std::make_unique<const uint8_t[]>(length);
 
     // Move back to beginning to copy data
     m_WADFile.seekg(0, m_WADFile.beg);
-    m_WADFile.read((char*)m_pWADData, length);
+    m_WADFile.read((char*)m_pWADData.get(), length);
     m_WADFile.close();
 
     return true;
@@ -178,12 +254,12 @@ bool WADLoader::OpenAndLoad()
 
 bool WADLoader::ReadHeaderAndDirectories()
 {
-    WADReader::ReadHeaderData(m_pWADData, m_WADHeader);
+    WADReader::ReadHeaderData(m_pWADData.get(), m_WADHeader);
 
     for (uint32_t i = 0; i < m_WADHeader.directoryCount; ++i)
     {
         WADDirectory dir;
-        WADReader::ReadDirectoryData(m_pWADData, m_WADHeader.directoryOffset + i * 16, dir);
+        WADReader::ReadDirectoryData(m_pWADData.get(), m_WADHeader.directoryOffset + i * 16, dir);
         m_WADDirectories.push_back(dir);
     }
 

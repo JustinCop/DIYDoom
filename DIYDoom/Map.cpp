@@ -1,6 +1,6 @@
 #include "Map.h"
 
-Map::Map(std::string sName, Player* pPlayer) :
+Map::Map(std::string sName, std::shared_ptr<Player> pPlayer) :
     m_name(sName),
     m_xMin(_I16_MAX),
     m_xMax(_I16_MIN),

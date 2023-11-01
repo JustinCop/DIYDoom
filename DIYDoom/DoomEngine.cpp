@@ -5,7 +5,7 @@ DoomEngine::DoomEngine():
     m_iRenderWidth(320),
     m_iRenderHeight(200)
 {
-    m_pPlayer = new Player(1);
+    m_pPlayer = std::make_shared<Player>(1);
     m_pMap = new Map("E1M1", m_pPlayer);
 }
 

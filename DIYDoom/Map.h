@@ -4,11 +4,12 @@
 #include "DataTypes.h"
 #include <SDL.h>
 #include "Player.h"
+#include <memory>
 
 class Map
 {
 public:
-    Map(std::string name, Player* pPlayer);
+    Map(std::string name, std::shared_ptr<Player> pPlayer);
     ~Map() {}
 
     std::string GetName() const { return m_name; }
@@ -35,6 +36,6 @@ protected:
     int m_iAutoMapScaleFactor;
     int m_iLumpIndex;   // Cache the lump index as soon as this map is found
 
-    Player* m_pPlayer;
+    std::shared_ptr<Player> m_pPlayer;
 };
 
