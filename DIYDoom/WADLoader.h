@@ -9,11 +9,12 @@
 class WADReader
 {
 public:
-    static void ReadHeaderData(const uint8_t* pWADData, WADHeader& header);
-    static void ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WADDirectory& directory);
-    static void ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex& vertex);
-    static void ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef& lineDef);
-    static void ReadThingData(const uint8_t* pWADData, uint32_t offset, Thing& thing);
+    static void ReadHeaderData(const uint8_t* pWADData, WADHeader* header);
+    static void ReadDirectoryData(const uint8_t* pWADData, uint32_t offset, WADDirectory* directory);
+    static void ReadVertexData(const uint8_t* pWADData, uint32_t offset, Vertex* vertex);
+    static void ReadLineDefData(const uint8_t* pWADData, uint32_t offset, LineDef* lineDef);
+    static void ReadThingData(const uint8_t* pWADData, uint32_t offset, Thing* thing);
+    static void ReadNodeData(const uint8_t* pWADData, uint32_t offset, Node* node);
 private:
     static uint16_t Read2Bytes(const uint8_t* pWADData, uint32_t offset);
     static uint32_t Read4Bytes(const uint8_t* pWADData, uint32_t offset);
@@ -55,6 +56,9 @@ private:
 
     // Read map Thing struct
     bool ReadMapThing(std::shared_ptr<Map> pMap);
+
+    // Read map Node struct
+    bool ReadMapNode(std::shared_ptr<Map> pMap);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;

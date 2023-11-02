@@ -38,10 +38,16 @@ void Map::AddThing(const Thing& thing)
     m_things.push_back(thing);
 }
 
+void Map::AddNode(const Node& node)
+{
+    m_nodes.push_back(node);
+}
+
 void Map::RenderAutoMap()
 {
     RenderAutoMapWalls();
     RenderAutoMapPlayer();
+    RenderAutoMapNodes();
 }
 
 void Map::RenderAutoMapPlayer()
@@ -78,6 +84,42 @@ void Map::RenderAutoMapWalls()
                            MapYToScreen(vEnd.y));
     }
 
+}
+
+void Map::RenderAutoMapNodes()
+{
+    // Get the last node
+    Node node = m_nodes.back();
+    SDL_Rect rightRect =
+    {
+        MapXToScreen(node.rightBoxLeft),
+        MapYToScreen(node.rightBoxTop),
+        MapXToScreen(node.rightBoxRight) - MapXToScreen(node.rightBoxLeft) + 1,
+        MapYToScreen(node.rightBoxBottom) - MapYToScreen(node.rightBoxTop) + 1
+    };
+
+    SDL_Rect leftRect =
+    {
+        MapXToScreen(node.leftBoxLeft),
+        MapYToScreen(node.leftBoxTop),
+        MapXToScreen(node.leftBoxRight) - MapXToScreen(node.leftBoxLeft) + 1,
+        MapYToScreen(node.leftBoxBottom) - MapYToScreen(node.leftBoxTop) + 1
+    };
+
+    // Draw right rect as green
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 0, 255, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawRect(m_pRenderer.get(), &rightRect);
+
+    // draw left rect as red
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawRect(m_pRenderer.get(), &leftRect);
+
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 0, 0, 255, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLine(m_pRenderer.get(),
+                       MapXToScreen(node.xPartition),
+                       MapYToScreen(node.yPartition),
+                       MapXToScreen(node.xPartition + node.changeXPartition),
+                       MapYToScreen(node.yPartition + node.changeYPartition));
 }
 
 int16_t Map::MapXToScreen(int16_t xMapPosition)

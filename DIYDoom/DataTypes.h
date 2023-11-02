@@ -79,6 +79,27 @@ enum MAP_LUMPS_INDEX
     eCOUNT
 };
 
+struct Node
+{
+    int16_t xPartition;
+    int16_t yPartition;
+    int16_t changeXPartition;
+    int16_t changeYPartition;
+
+    int16_t rightBoxTop;
+    int16_t rightBoxBottom;
+    int16_t rightBoxLeft;
+    int16_t rightBoxRight;
+
+    int16_t leftBoxTop;
+    int16_t leftBoxBottom;
+    int16_t leftBoxLeft;
+    int16_t leftBoxRight;
+
+    uint16_t rightChildID;
+    uint16_t leftChildID;
+};
+
 #define str_THINGS "THINGS"
 #define str_LINEDEFS "LINEDEFS"
 #define str_SIDEDDEFS "SIDEDDEFS"

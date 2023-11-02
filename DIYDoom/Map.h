@@ -15,6 +15,7 @@ public:
     void AddVertex(const Vertex& v);
     void AddLineDef(const LineDef& l) { m_lineDefs.push_back(l); }
     void AddThing(const Thing& thing);
+    void AddNode(const Node& node);
     void RenderAutoMap();
     void SetLumpIndex(int index) { m_iLumpIndex = index; }
     int GetLumpIndex() const { return m_iLumpIndex; }
@@ -22,6 +23,7 @@ public:
 protected:
     void RenderAutoMapPlayer();
     void RenderAutoMapWalls();
+    void RenderAutoMapNodes();
 
     // Convert WAD File position data to screen coord.
     int16_t MapXToScreen(int16_t xMapPosition);
@@ -31,6 +33,7 @@ protected:
     std::vector<Vertex> m_vertices;
     std::vector<LineDef> m_lineDefs;
     std::vector<Thing> m_things;
+    std::vector<Node> m_nodes;
 
     // The position data from WAD file.
     // Right: +X
