@@ -47,7 +47,7 @@ void Map::RenderAutoMap()
 {
     RenderAutoMapWalls();
     RenderAutoMapPlayer();
-    RenderAutoMapNodes();
+    RenderBSPNodes();
 }
 
 void Map::RenderAutoMapPlayer()
@@ -86,10 +86,14 @@ void Map::RenderAutoMapWalls()
 
 }
 
-void Map::RenderAutoMapNodes()
+void Map::RenderBSPNodes()
 {
-    // Get the last node
-    Node node = m_nodes.back();
+    RenderBSPNodes(m_nodes.size() - 1);
+}
+
+void Map::RenderAutoMapNode(int16_t iNodeID)
+{
+    Node node = m_nodes[iNodeID];
     SDL_Rect rightRect =
     {
         MapXToScreen(node.rightBoxLeft),
@@ -114,12 +118,69 @@ void Map::RenderAutoMapNodes()
     SDL_SetRenderDrawColor(m_pRenderer.get(), 255, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderDrawRect(m_pRenderer.get(), &leftRect);
 
+    // draw the partition line
     SDL_SetRenderDrawColor(m_pRenderer.get(), 0, 0, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderDrawLine(m_pRenderer.get(),
                        MapXToScreen(node.xPartition),
                        MapYToScreen(node.yPartition),
                        MapXToScreen(node.xPartition + node.changeXPartition),
                        MapYToScreen(node.yPartition + node.changeYPartition));
+
+    // draw the partition origin
+    SDL_SetRenderDrawColor(m_pRenderer.get(), 100, 100, 100, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawPoint(m_pRenderer.get(),
+                        MapXToScreen(node.xPartition),
+                        MapYToScreen(node.yPartition));
+}
+
+void Map::RenderBSPNodes(int16_t iNodeID)
+{
+    // Check most significant bit
+    const bool bIsLeafSector = iNodeID & SUBSECTOR_IDENTIFIER;
+    iNodeID = iNodeID & (~SUBSECTOR_IDENTIFIER);
+    
+    if (bIsLeafSector)
+    {
+        RenderSubSector(iNodeID);
+        return;
+    }
+
+    // Debug: Render the Node square.
+    // Cannot call this before RenderSubSector, since iNodeID will be m_nodes.size(), which causes out_of_range
+    // error. If iNodeID == m_nodes.size(), the "if (bIsLeafSector)" statement must be true, so will not call
+    // RenderAutoMapNode, don't know why...
+    RenderAutoMapNode(iNodeID);
+
+    bool isOnLeft = IsPointOnLeftSide(m_pPlayer->GetXPosition(), m_pPlayer->GetYPosition(), iNodeID);
+    const Node& curNode = m_nodes[iNodeID];
+    if (isOnLeft)
+    {
+        RenderBSPNodes(curNode.leftChildID);
+        RenderBSPNodes(curNode.rightChildID);
+    }
+    else
+    {
+        RenderBSPNodes(curNode.rightChildID);
+        RenderBSPNodes(curNode.leftChildID);
+    }
+}
+
+void Map::RenderSubSector(int16_t iNodeID)
+{
+}
+
+bool Map::IsPointOnLeftSide(int16_t xPosition, int16_t yPosition, int iNodeID)
+{
+    // v1: vector from partition origin to target point
+    const int16_t v1x = xPosition - m_nodes[iNodeID].xPartition;
+    const int16_t v1y = yPosition - m_nodes[iNodeID].yPartition;
+
+    // v2: vector of the partition
+    const int16_t v2x = m_nodes[iNodeID].changeXPartition;
+    const int16_t v2y = m_nodes[iNodeID].changeYPartition;
+
+    // check cross product
+    return (v2x * v1y - v2y * v1x >= 0);
 }
 
 int16_t Map::MapXToScreen(int16_t xMapPosition)

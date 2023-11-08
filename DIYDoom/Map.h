@@ -21,9 +21,15 @@ public:
     int GetLumpIndex() const { return m_iLumpIndex; }
 
 protected:
+    // Render function
     void RenderAutoMapPlayer();
     void RenderAutoMapWalls();
-    void RenderAutoMapNodes();
+    void RenderBSPNodes();
+    void RenderBSPNodes(int16_t iNodeID);   // Binary Space Partioning
+    void RenderAutoMapNode(int16_t iNodeID);
+    void RenderSubSector(int16_t iNodeID);
+
+    bool IsPointOnLeftSide(int16_t xPosition, int16_t yPosition, int iNodeID);
 
     // Convert WAD File position data to screen coord.
     int16_t MapXToScreen(int16_t xMapPosition);

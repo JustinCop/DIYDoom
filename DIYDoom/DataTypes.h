@@ -10,6 +10,13 @@
 #define WINDOW_HEIGHT (RENDER_HEIGHT * 4)
 #define AUTO_MAP_SCALE_FACTOR 15
 
+
+// The most significant bit of node id indicates whether the node is a sub-sector leaf node.
+// 1: the node is a leaf node.
+// 0x8000 in binary 1000000000000000
+#define SUBSECTOR_IDENTIFIER 0x8000
+
+
 struct WADHeader
 {
     char type[5];    // either IWAD (official) or PWAD (mod)
