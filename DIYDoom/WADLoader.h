@@ -49,16 +49,16 @@ private:
     int FindMapIndex(std::shared_ptr<Map> pMap);
     
     // Read map vertex data and save into a named map.
-    bool ReadMapVertex(std::shared_ptr<Map> pMap);
+    bool ReadMapVertices(std::shared_ptr<Map> pMap);
     
     // Read map lineDef data and save into a named map.
-    bool ReadMapLineDef(std::shared_ptr<Map> pMap);
+    bool ReadMapLineDefs(std::shared_ptr<Map> pMap);
 
     // Read map Thing struct
-    bool ReadMapThing(std::shared_ptr<Map> pMap);
+    bool ReadMapThings(std::shared_ptr<Map> pMap);
 
     // Read map Node struct
-    bool ReadMapNode(std::shared_ptr<Map> pMap);
+    bool ReadMapNodes(std::shared_ptr<Map> pMap);
 
     std::string m_WADFilePath;
     std::ifstream m_WADFile;

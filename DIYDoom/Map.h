@@ -27,7 +27,7 @@ protected:
     void RenderBSPNodes();
     void RenderBSPNodes(int16_t iNodeID);   // Binary Space Partioning
     void RenderAutoMapNode(int16_t iNodeID);
-    void RenderSubSector(int16_t iNodeID);
+    void RenderSubSector(int16_t iNodeID);  // Render the leaf node
 
     bool IsPointOnLeftSide(int16_t xPosition, int16_t yPosition, int iNodeID);
 

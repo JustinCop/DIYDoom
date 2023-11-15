@@ -12,7 +12,7 @@
 
 
 // The most significant bit of node id indicates whether the node is a sub-sector leaf node.
-// 1: the node is a leaf node.
+// Q: A sub-sector is a leaf node? They are the same?
 // 0x8000 in binary 1000000000000000
 #define SUBSECTOR_IDENTIFIER 0x8000
 
@@ -105,6 +105,22 @@ struct Node
 
     uint16_t rightChildID;
     uint16_t leftChildID;
+};
+
+struct Subsector
+{
+    uint16_t segCount;
+    uint16_t firstSegID;
+};
+
+struct Seg
+{
+    uint16_t startVertexID;
+    uint16_t endVertexID;
+    uint16_t angle;
+    uint16_t lineDefID;
+    uint16_t direction; // 0: same as lineDef, 1: opposite of linedef
+    uint16_t offset;    // distance along linedef to start of seg
 };
 
 #define str_THINGS "THINGS"

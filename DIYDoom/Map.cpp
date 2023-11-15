@@ -145,11 +145,14 @@ void Map::RenderBSPNodes(int16_t iNodeID)
         return;
     }
 
+    /////////////////////////////////
     // Debug: Render the Node square.
-    // Cannot call this before RenderSubSector, since iNodeID will be m_nodes.size(), which causes out_of_range
-    // error. If iNodeID == m_nodes.size(), the "if (bIsLeafSector)" statement must be true, so will not call
-    // RenderAutoMapNode, don't know why...
+    // Cannot call RenderAutoMapNode before RenderSubSector.
+    // For example, in E1M1, left child of Node 231 is -32530, in next call to RenderBSPNodes(-32530),
+    // -32530 & (~SUBSECTOR_IDENTIFIER) == 238 == m_nodes.size(), calling RenderAutoMapNode(238) causes out_of_range error. 
+    // Please call RenderAutoMapNode() after the "if (bIsLeafSector)" statement.
     RenderAutoMapNode(iNodeID);
+    //////////////////////////
 
     bool isOnLeft = IsPointOnLeftSide(m_pPlayer->GetXPosition(), m_pPlayer->GetYPosition(), iNodeID);
     const Node& curNode = m_nodes[iNodeID];
@@ -179,7 +182,7 @@ bool Map::IsPointOnLeftSide(int16_t xPosition, int16_t yPosition, int iNodeID)
     const int16_t v2x = m_nodes[iNodeID].changeXPartition;
     const int16_t v2y = m_nodes[iNodeID].changeYPartition;
 
-    // check cross product
+    // check cross product: v2 x v1
     return (v2x * v1y - v2y * v1x >= 0);
 }
 

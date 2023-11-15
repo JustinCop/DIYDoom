@@ -128,27 +128,27 @@ bool WADLoader::LoadMapData(std::shared_ptr<Map> pMap)
     std::cout << "Info: Parsing Map: " << pMap->GetName() << std::endl;
 
     std::cout << "Info: Processing Map Vertex" << std::endl;
-    if (!ReadMapVertex(pMap))
+    if (!ReadMapVertices(pMap))
     {
         std::cout << "Error: Failed to load map vertex data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
     std::cout << "Info: Processing Map Linedef" << std::endl;
-    if (!ReadMapLineDef(pMap))
+    if (!ReadMapLineDefs(pMap))
     {
         std::cout << "Error: Failed to load map linedef data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
 
     std::cout << "Info: Processing Map Things" << std::endl;
-    if (!ReadMapThing(pMap))
+    if (!ReadMapThings(pMap))
     {
         std::cout << "Error: Failed to load map thing data MAP: " << pMap->GetName() << std::endl;
         return false;
     }
 
     std::cout << "Info: Processing Map Nodes" << std::endl;
-    if (!ReadMapNode(pMap))
+    if (!ReadMapNodes(pMap))
     {
         std::cout << "Error: Failed to load map node data MAP: " << pMap->GetName() << std::endl;
         return false;
@@ -176,7 +176,7 @@ int WADLoader::FindMapIndex(std::shared_ptr<Map> pMap)
     return -1;
 }
 
-bool WADLoader::ReadMapVertex(std::shared_ptr<Map> pMap)
+bool WADLoader::ReadMapVertices(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
@@ -203,7 +203,7 @@ bool WADLoader::ReadMapVertex(std::shared_ptr<Map> pMap)
     return true;
 }
 
-bool WADLoader::ReadMapLineDef(std::shared_ptr<Map> pMap)
+bool WADLoader::ReadMapLineDefs(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
@@ -230,7 +230,7 @@ bool WADLoader::ReadMapLineDef(std::shared_ptr<Map> pMap)
     return true;
 }
 
-bool WADLoader::ReadMapThing(std::shared_ptr<Map> pMap)
+bool WADLoader::ReadMapThings(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
@@ -257,7 +257,7 @@ bool WADLoader::ReadMapThing(std::shared_ptr<Map> pMap)
     return true;
 }
 
-bool WADLoader::ReadMapNode(std::shared_ptr<Map> pMap)
+bool WADLoader::ReadMapNodes(std::shared_ptr<Map> pMap)
 {
     int iMapIndex = FindMapIndex(pMap);
     if (iMapIndex == -1)
